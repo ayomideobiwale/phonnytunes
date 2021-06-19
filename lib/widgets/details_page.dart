@@ -34,8 +34,8 @@ Widget _buildTopView() {
    child:Container( decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
+                  bottomLeft: Radius.circular(21),
+                  bottomRight: Radius.circular(21)
                   )
                   )
                   ),
