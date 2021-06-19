@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "735413593003",
+    "project_id": "phonnytunes",
+    "storage_bucket": "phonnytunes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735413593003:android:539e0e1a6715d24a63e8ee",
+        "android_client_info": {
+          "package_name": "com.example.phonnytunes_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735413593003-gavpetn2bmfl7akuis3qef788idfivre.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.phonnytunes_application",
+            "certificate_hash": "70ea0bcb103e29eb4ebfb46b7f7d72b01a14e308"
+          }
+        },
+        {
+          "client_id": "735413593003-1nv59ul58c3ho45jq0rsqijkvumkopk8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZJVKHLmLKCXZD7MAMm-kll8Gjf06MKko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735413593003-1nv59ul58c3ho45jq0rsqijkvumkopk8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
