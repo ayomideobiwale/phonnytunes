@@ -1,20 +1,23 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:phonnytunes_application/constants/firebase.dart';
+import 'package:phonnytunes_application/controllers/location_controller.dart';
 import 'package:phonnytunes_application/controllers/user_controller.dart';
+import 'package:phonnytunes_application/screens/homescreen.dart';
+import 'package:phonnytunes_application/screens/loginscreen.dart';
+import 'package:phonnytunes_application/screens/signup.dart';
+import 'package:phonnytunes_application/screens/userchooserscreen.dart';
 import 'package:phonnytunes_application/widgets/loadingpage.dart';
-import 'package:phonnytunes_application/widgets/screens/homescreen.dart';
-import 'package:phonnytunes_application/widgets/screens/loginscreen.dart';
-import 'package:phonnytunes_application/widgets/screens/profileScreen.dart';
-import 'package:phonnytunes_application/widgets/screens/signup.dart';
-import 'package:phonnytunes_application/widgets/screens/userchooserscreen.dart';
-import 'package:phonnytunes_application/widgets/screens/profileScreen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  Get.put(UserController());
+  await initialization.then((value) {
+    Get.put(UserController());
+    Get.put(LocationController());
+  });
+
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
     routes: {

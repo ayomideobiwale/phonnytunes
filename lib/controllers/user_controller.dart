@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:phonnytunes_application/constants/firebase.dart';
+import 'package:phonnytunes_application/model/user.dart';
+import 'package:phonnytunes_application/screens/loginscreen.dart';
+import 'package:phonnytunes_application/screens/userchooserscreen.dart';
 import 'package:phonnytunes_application/widgets/loadingpage.dart';
-import 'package:phonnytunes_application/widgets/screens/homescreen.dart';
-import 'package:phonnytunes_application/widgets/screens/userchooserscreen.dart';
 
 class UserController extends GetxController {
   static UserController instance = Get.find();
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  // FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -18,28 +21,42 @@ class UserController extends GetxController {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
 
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  //   navigate();
-  // }
+  Rx<User> firebaseUser;
+  String usersCollection = "users";
+  final _storage = GetStorage();
+  Rx<UserData> userData = UserData().obs;
+  @override
+  void onReady() {
+    super.onReady();
+    firebaseUser = Rx<User>(auth.currentUser);
+    firebaseUser.bindStream(auth.userChanges());
+    ever(firebaseUser, setInitialScreen);
+  }
 
-  // navigate() {
-  //   User user = _auth.currentUser;
-  //   if (user != null) {
-  //     Get.to(MapHome());
-  //   }
-  // }
+  setInitialScreen(User user) {
+    bool onInstall = _storage.read("FreshInstall");
+    if (onInstall == true || onInstall == null) {
+      Get.offAll(HomePage());
+    } else {
+      if (user == null) {
+        Get.offAll(DrawerScreen());
+      } else {
+        userData.bindStream(userDataStream());
+        Get.offAll(UserMode());
+      }
+    }
+  }
 
+  
   logOut() {
-    _auth.signOut();
+    auth.signOut();
     Get.offAll(HomePage());
   }
 
   createUserAccount() async {
     /*This creates the user account*/
     try {
-      UserCredential credential = await _auth.createUserWithEmailAndPassword(
+      UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
       User user = credential.user;
@@ -62,9 +79,11 @@ class UserController extends GetxController {
       "name": fullnameController.text.trim(),
       "password": passwordController.text.trim(),
       "phoneNo": phoneNoController.text.trim(),
+      "profilePicture": "",
     }).then((value) {
+      userData.bindStream(userDataStream());
       clearController();
-      Get.to(UserMode());
+      // Get.to(UserMode());
     });
   }
 
@@ -109,13 +128,13 @@ class UserController extends GetxController {
   loginuseraccount() async {
     /*This creates the user account*/
     try {
-      await _auth
+      await auth
           .signInWithEmailAndPassword(
               email: emailController.text.trim(),
               password: passwordController.text.trim())
           .then((value) {
         clearController();
-        Get.to(UserMode());
+        // Get.to(UserMode());
       });
     } catch (e) {
       print(e);
@@ -129,10 +148,16 @@ class UserController extends GetxController {
   }
 
   changePassowrd() async {
-    User user = await FirebaseAuth.instance.currentUser;
-    user.updatePassword(passwordController.text.trim())..then((value) {
-      clearController();
-      Get.to(UserMode());
-    });
+    // User user = await FirebaseAuth.instance.currentUser;
+    // user.updatePassword(passwordController.text.trim())..then((value) {
+    //   clearController();
+    //   // Get.to(UserMode());
+    // });
   }
+  Stream<UserData> userDataStream() => firebaseFirestore
+      .collection(usersCollection)
+      .doc(firebaseUser.value.uid)
+      .snapshots()
+      .map((snapshot) => UserData.fromSnapshot(snapshot));
+
 }

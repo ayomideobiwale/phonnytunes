@@ -3,8 +3,8 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:phonnytunes_application/controllers/user_controller.dart';
+import 'package:phonnytunes_application/widgets/colors.dart';
 
-import '../colors.dart';
 
 class Settings extends StatefulWidget {
   @override
