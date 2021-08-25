@@ -22,6 +22,7 @@ import 'package:phonnytunes_application/widgets/custom_text.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:uuid/uuid.dart';
+import 'package:geolocator/geolocator.dart' as g;
 
 class LocationController extends GetxController {
   static LocationController instance = Get.find();
@@ -64,9 +65,9 @@ class LocationController extends GetxController {
   }
 
   _getCurrentLocation() async {
-    await Geolocator.getCurrentPosition(
+    await Geolocator().getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
+            )
         .then((Position position) {
       _currentPosition = position;
       print(_currentPosition);
@@ -78,10 +79,10 @@ class LocationController extends GetxController {
 
   _getAddressFromLatLng() async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
+      List<g.Placemark> placemarks = await Geolocator().placemarkFromCoordinates(
           _currentPosition.latitude, _currentPosition.longitude);
 
-      Placemark place = placemarks[0];
+      g.Placemark place = placemarks[0];
 
       userAddress.value = "${place.locality}, ${place.country}";
       print(userAddress.value);
@@ -159,12 +160,12 @@ class LocationController extends GetxController {
   }
 
   Future<Position> _getUserLocation() async {
-    position = await Geolocator.getCurrentPosition();
+    position = await Geolocator().getCurrentPosition();
     print(
         "==============================>${position.latitude}, ${position.longitude}");
 
-    List<Placemark> placemark =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    List<g.Placemark> placemark =
+        await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
 
     if (box.read('country') == null) {
       String country = placemark[0].isoCountryCode.toLowerCase();
@@ -357,7 +358,7 @@ class LocationController extends GetxController {
             _markers.remove(element);
             pickupCoordinates.value = position.target;
             addPickupMarker(position.target);
-            List<Placemark> placemark = await placemarkFromCoordinates(
+            List<g.Placemark> placemark = await Geolocator().placemarkFromCoordinates(
                 position.target.latitude, position.target.longitude);
             pickupLocationController.text = placemark[0].name;
           }
